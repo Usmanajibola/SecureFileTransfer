@@ -26,5 +26,6 @@ sqlparse==0.4.2
 trio==0.19.0
 trio-websocket==0.9.2
 urllib3==1.26.8
+whitenoise==5.3.0
 wsproto==1.0.0
 zipp==3.7.0
