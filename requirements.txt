@@ -14,8 +14,10 @@ idna==3.3
 importlib-metadata==4.10.1
 Markdown==3.3.6
 outcome==1.1.0
+psycopg2==2.9.3
 pycparser==2.21
 pyOpenSSL==22.0.0
+python-decouple==3.6
 pytz==2021.3
 selenium==4.1.0
 sniffio==1.2.0

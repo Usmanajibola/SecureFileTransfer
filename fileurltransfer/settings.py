@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from ctypes import cast
+from email.policy import default
 from pathlib import Path
+from decouple import config
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vg_qnz5h7yrs!gjpf=c9vm6s9fanoof!d0u#2h4a)%m9jxi&_w'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", cast=int, default=0)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS").split(" ")
+
 
 
 # Application definition
@@ -83,9 +87,13 @@ WSGI_APPLICATION = 'fileurltransfer.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": config("SQL_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": config("SQL_DATABASE", default=BASE_DIR / "db.sqlite3"),
+        "USER": config("SQL_USER", default="user"),
+        "PASSWORD": config("SQL_PASSWORD", default="password"),
+        "HOST": config("SQL_HOST", default="localhost"),
+        "PORT": config("SQL_PORT", default="5432"),
     },
     'TEST': {
             'USER': 'django',
