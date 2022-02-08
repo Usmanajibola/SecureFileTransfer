@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-BASE_URL = 'http://localhost:8000/'
+BASE_URL = config("BASE_URL", 'http://localhost:8000/')
 
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

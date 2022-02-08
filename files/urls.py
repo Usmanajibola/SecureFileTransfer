@@ -10,5 +10,6 @@ urlpatterns = [
     path('secure-link/<str:signed_pk>/', views.SecureLinkView.as_view(), name='secure-link'),
     path('secure-file/<str:signed_pk>/', views.SecureFileView.as_view(), name='secure-file'),
     path('login/', views.LoginView.as_view(), name="login"),
+    path('signup/', views.SignUpView.as_view(), name="signup"),
     path('logout/', views.LogoutView.as_view(), name="logout")
 ]

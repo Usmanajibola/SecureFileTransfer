@@ -4,7 +4,6 @@ from django.views.generic.list import ListView
 from django.utils.crypto import get_random_string
 from django.core.signing import TimestampSigner
 from django.core.signing import BadSignature, SignatureExpired
-
 from files.forms import FileForm, LinkForm, PasswordForm
 from .models import File, Link, MyUser
 from django.contrib import messages
@@ -13,16 +12,18 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 class HomeView(ListView):
-    all_links = Link.objects.all()
-    all_files = File.objects.all()
 
     def get(self, request):
+        print(request.META.get('HTTP_USER_AGENT', ''))
         return render(request, 'home.html', {})
 
 class FileView(ListView):
   
     def get(self, request):
-        if request.session['user'] == None:
+        try:
+            if request.session['user'] == None:
+                return redirect('home')
+        except:
             return redirect('home')
         form = FileForm()
         return render(request, 'upload_file.html', {'form':form})
@@ -46,7 +47,10 @@ class FileView(ListView):
 
 class LinkView(ListView):
     def get(self, request):
-        if request.session['user'] == None:
+        try:
+            if request.session['user'] == None:
+                return redirect('home')
+        except:
             return redirect('home')
         form = LinkForm()
         return render(request, 'upload_link.html', {'form':form})
@@ -135,8 +139,11 @@ class LoginView(ListView):
         try:
             user = User.objects.get(username=username, password=password)
             user = MyUser.objects.get(user=user)
-            print(user)
+            user_agent = request.META.get('HTTP_USER_AGENT', '')
+            user.agent = user_agent
+            user.save()
             request.session['user'] = user.user.username
+            request.session['agent'] = user_agent
             messages.success(request, "Login Successful")
             return redirect('home')
 
@@ -152,30 +159,31 @@ class LogoutView(ListView):
         except:
             return redirect('home')
 
-# class HomePageView(ListView):
-#     def get(self, request):
-#         '''
-#         If user request get method in url direct than reach home page.
-#         '''
-#         all_posts = Post.objects.all().order_by('-id')
-#         param = {'posts':all_posts}
-#         return render(request, 'main/home.html', param)
+class SignUpView(ListView):
+    def get(self, request):
+        
+        return redirect('home')
 
-#     def post(self, request):
-#         '''
-#         Create account system
-#         '''
-#         user_name = request.POST['uname']
-#         pwd1 = request.POST['pwd1']
-#         pwd2 = request.POST['pwd2']
-#         print(user_name)
-#         print(pwd1)
-#         print(pwd2)
-#         if pwd1 == pwd2:
-#             add_user = User(username=user_name, password=pwd1)
-#             add_user.save()
-#             messages.success(request, 'Account has been created successfully.')
-#             return redirect('home')
-#         else:
-#             messages.warning(request, 'Passwords are not same.')
-#             return redirect('home')
+    def post(self, request):
+        '''
+        Create account system
+        '''
+        user_name = request.POST['uname']
+        pwd1 = request.POST['pwd1']
+        pwd2 = request.POST['pwd2']
+        print(user_name)
+        print(pwd1)
+        print(pwd2)
+        if pwd1 == pwd2:
+            try:
+                add_user = User(username=user_name, password=pwd1)
+                add_user.save()
+                my_user = MyUser(user=add_user, agent=None)
+                my_user.save()
+                messages.success(request, 'Account has been created successfully.')
+            except:
+                messages.warning(request, 'Signup Failed. Try Again!')
+            return redirect('home')
+        else:
+            messages.warning(request, 'Passwords are not same.')
+            return redirect('home')

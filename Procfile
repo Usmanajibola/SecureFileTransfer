@@ -1,1 +1,1 @@
-web: guincorn fileurltransfer.wsgi
+web: gunicorn fileurltransfer.wsgi
