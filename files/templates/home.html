@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h2 class="text-center mb-3">Welcome to Usman Secure!!!</h2>
+
+{% if request.session.user %}
+    <h2 class="">What would you like to secure?</h2>
+    <div class="row">
+        <div class="col">
+            <a href="{% url 'file' %}"  class="btn btn-primary mr-3 px-3">File</a>
+            <a href="{% url 'link' %}"  class="btn btn-dark px-3">Link</a>
+        </div>
+    </div>
+{% else %}
+    <p>Login or Signup to get Started</p>
+    <div class="row">
+        <div class="col">
+            <a  class="btn btn-primary mr-3 px-3" data-toggle="modal" id="login-button" data-target="#loginModal">Login</a>
+            <a  class="btn btn-dark px-3" data-toggle="modal" data-target="#signupModal">Signup</a>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+{% endblock %}
+

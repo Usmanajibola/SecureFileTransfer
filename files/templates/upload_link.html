@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h2 class="my-2">
+    Kindly insert link you want to protect here
+</h2>
+{% if unique_link %}
+    <h4>A unique link has been generated</h4>
+    <a href="{{unique_link}}" class="btn btn-success">Visit Generated Link</a>
+    <h4 class="my-2">Here's your generated password. You'll need this to get your secureUrl</h4>
+    <p>{{password}}</p>
+
+{% else %}
+    <form action="{% url 'link' %}" method="POST">
+        {% csrf_token %}
+        {{form | crispy}}
+        <input type="submit" class="btn btn-info" value="Upload Link">
+    </form>
+{% endif %}
+{% endblock %}

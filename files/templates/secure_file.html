@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{%if file %}
+    <h4>Heres: your secured file:</h4>
+    <a href="{{file.url}}" class="btn btn-secondary" download>Download file</a>
+{%else%}
+    {% if form %}
+    <h2 class="my-2">
+        Input password to get secured link
+    </h2>
+    <form action="{% url 'secure-file' signed_pk %}" method="POST">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <input type="submit" class="btn btn-info" value="Get File">
+    </form>
+    {% endif %}
+{%endif%}
+
+{% endblock %}
