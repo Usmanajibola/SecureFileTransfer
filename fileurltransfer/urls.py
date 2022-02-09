@@ -21,7 +21,7 @@ import files, api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('files.urls')),
+    path(r'', include('files.urls')),
     path('api/', include('api.urls'))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
